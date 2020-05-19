@@ -59,7 +59,7 @@ app.get('/', function (req, res) {
   res.send('Hello World!');
 });
 
-//User auth related queries
+//USER AUTH RELATED ROUTES
 app.post('/register', async (req, res) => {
   const { username, password, name } = req.body
   //hashes the password and inserts the user in the DB.
@@ -186,8 +186,34 @@ app.post('/refresh_token', (req, res) => {
   })
 })
 
+//HOTEL RELATED ROUTES
+//get hotel list based on user id
+app.get('/user/:id/hotel-list', async(req,res) =>{
+  const userId = req.params.id;
+  db.query("SELECT hotels.* from users inner join users_hotels on users.id=users_hotels.id_user inner join hotels on hotels.id=users_hotels.id_hotel where users.id='"+userId+"'").then(data =>{
+    console.log(data)
+    res.send(data)
+  }).catch(err =>{
+    res.send(err)
+    console.log(err)
+  })
+})
+//register a new hotel
+app.post('/hotel/register', async(req,res) =>{
+  const { name, address, phone, mail } = req.body;
+  db.query("INSERT INTO hotels (name, address, phone, mail) VALUES ('" + name + "','" + address + "','" + phone + "','" + mail + "')").then(data =>{
+    console.log(data)
+    res.status(200).send("inserted")
+  }).catch(err =>{
+    console.log(err)
+    res.status(400).send(err)
+  })
+})
+
 app.get('/require', requireLogin, async(req,res) =>{
- res.send("hi")
+  
+
+
 })
 
 app.listen(3000, function () {
