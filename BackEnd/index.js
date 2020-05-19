@@ -16,9 +16,44 @@ const { hash, compare } = require('bcryptjs')
 const { verify } = require('jsonwebtoken')
 const { createAccessToken, createRefreshToken, sendAccessToken } = require('./token.js')
 const { isAuth } = require('./isAuth.js')
+const { refresh } = require('./refresh.js')
+const { isAuthRefreshed } = require('./isAuthRefreshed.js')
 //db settings
 const pgp = require("pg-promise")();
 const db = pgp(constants.dbUrl)
+
+//Login protection middleware for api
+function requireLogin(req, res, next) {
+ 
+  try {
+
+    const userId = isAuth(req)
+    if (userId !== null) {
+      next();
+    }
+
+  } catch (err) {
+    if (err.message == "jwt expired") {
+
+      async function result() {
+        var data = await refresh(req)
+
+        const userId = isAuthRefreshed(data.accesstoken)
+        if (userId !== null) {
+          next();
+        }
+      }
+      result();
+    }
+    if (err.message != "jwt expired") {
+      res.status(400).send({
+        error: `${err.message}`
+      })
+    }
+
+  }
+}
+
 
 app.get('/', function (req, res) {
   res.send('Hello World!');
@@ -103,7 +138,7 @@ app.post('/refresh_token', (req, res) => {
   var userId = verify(accesstoken, process.env.ACCESS_TOKEN_SECRET, { ignoreExpiration: true })
   userId = userId.userId
 
-  
+
 
   //once userId refresh token is know we verify it
   db.query("SELECT * FROM users where id='" + userId + "'").then(data => {
@@ -111,7 +146,7 @@ app.post('/refresh_token', (req, res) => {
     token = user[0].refresh_token;
     var id = user[0].id;
     if (!token) return res.send({ accesstoken: '' });
-    
+
     let payload = null;
 
     try {
@@ -149,6 +184,10 @@ app.post('/refresh_token', (req, res) => {
       res.send(error);
     })
   })
+})
+
+app.get('/require', requireLogin, async(req,res) =>{
+ res.send("hi")
 })
 
 app.listen(3000, function () {
