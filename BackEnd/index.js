@@ -198,6 +198,7 @@ app.get('/user/:id/hotel-list', async(req,res) =>{
     console.log(err)
   })
 })
+
 //register a new hotel
 app.post('/hotel/register', async(req,res) =>{
   const { name, address, phone, mail } = req.body;
@@ -222,10 +223,22 @@ app.delete('/hotel/:id/delete', async (req,res) =>{
   })
 })
 
+//Update hotel info
+app.post('/hotel/:id/update', async (req,res) =>{
+  const {name, address, phone, mail} = req.body
+  const hotelId = req.params.id;
+
+  db.query("UPDATE hotels SET name= '"+name+"' , address = '"+address+"', phone = '"+phone+"', mail = '"+mail+"' where id = '"+hotelId+"'").then(data =>{
+    console.log(data);
+    res.status(200).send("updated")
+  }).catch(err => {
+    console.log(err)
+    res.status(400).send(err)
+  })
+})
+
 app.get('/require', requireLogin, async(req,res) =>{
   
-
-
 })
 
 app.listen(3000, function () {
