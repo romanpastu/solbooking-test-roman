@@ -13,6 +13,7 @@ app.use(cors());
 
 //jwt management and auth
 const { hash, compare } = require('bcryptjs')
+const { verify } = require('jsonwebtoken')
 const { createAccessToken, createRefreshToken, sendAccessToken } = require('./token.js')
 const { isAuth } = require('./isAuth.js')
 //db settings
@@ -78,21 +79,77 @@ app.post('/login', async (req, res) => {
 })
 
 //token verification route
-app.post('/verify', async(req,res) =>{
-  try{
+app.post('/verify', async (req, res) => {
+  try {
     const userId = isAuth(req)
-    if(userId !== null){
+    if (userId !== null) {
       res.send({
         status: "valid"
       })
     }
-  }catch (err){
+  } catch (err) {
     res.send({
       error: `${err.message}`
     })
   }
 })
 
+//token refreshing route
+app.post('/refresh_token', (req, res) => {
+  const authorization = req.headers['authorization']
+
+  if (!authorization) throw new Error("You need to login");
+  accesstoken = authorization.split(' ')[1];
+  var userId = verify(accesstoken, process.env.ACCESS_TOKEN_SECRET, { ignoreExpiration: true })
+  userId = userId.userId
+
+  
+
+  //once userId refresh token is know we verify it
+  db.query("SELECT * FROM users where id='" + userId + "'").then(data => {
+    var user = data;
+    token = user[0].refresh_token;
+    var id = user[0].id;
+    if (!token) return res.send({ accesstoken: '' });
+    
+    let payload = null;
+
+    try {
+      payload = verify(token, process.env.REFRESH_TOKEN_SECRET);
+    } catch (err) {
+      return res.send({ accesstoken: '' });
+    }
+
+    user = ""
+
+    db.query("SELECT * FROM users WHERE id='" + id + "'").then(function (data) {
+      user = data;
+      if (!user) return res.send({ accesstoken: '' });
+      //if user exists check if refreshtoken exist on user
+
+      if (user[0].refresh_token !== token) {
+        return res.send({ accesstoken: '' })
+      }
+
+      //if token exist create a new Refresh and Accestoken
+      const accesstoken = createAccessToken(user[0].id);
+      const refreshtoken = createRefreshToken(user[0].id);
+
+      db.query("UPDATE users SET refresh_token = '" + refreshtoken + "' WHERE id = '" + user[0].id + "';").then(function (data) {
+        // sendRefreshToken(res, refreshtoken); //unnecesary
+        return res.send({ accesstoken });
+
+      }).catch(function (error) {
+        console.log("ERROR: ", error)
+      })
+
+
+    }).catch(function (error) {
+      console.log("ERROR: ", error)
+      res.send(error);
+    })
+  })
+})
 
 app.listen(3000, function () {
   console.log('Example app listening on port 3000!');
