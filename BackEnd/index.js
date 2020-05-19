@@ -14,6 +14,7 @@ app.use(cors());
 //jwt management and auth
 const { hash, compare } = require('bcryptjs')
 const { createAccessToken, createRefreshToken, sendAccessToken } = require('./token.js')
+const { isAuth } = require('./isAuth.js')
 //db settings
 const pgp = require("pg-promise")();
 const db = pgp(constants.dbUrl)
@@ -70,6 +71,22 @@ app.post('/login', async (req, res) => {
       res.send(error)
     })
   } catch (err) {
+    res.send({
+      error: `${err.message}`
+    })
+  }
+})
+
+//token verification route
+app.post('/verify', async(req,res) =>{
+  try{
+    const userId = isAuth(req)
+    if(userId !== null){
+      res.send({
+        status: "valid"
+      })
+    }
+  }catch (err){
     res.send({
       error: `${err.message}`
     })
