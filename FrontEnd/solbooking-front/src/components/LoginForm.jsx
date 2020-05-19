@@ -37,8 +37,8 @@ class LoginForm extends React.Component {
                 {this.state.wrongCombo ? <Alert variant="danger" dismissible onClose={this.handleDismiss}> Wrong username and password combination </Alert> : null}
                 {this.state.serverError ? <Alert variant="danger" dismissible onClose={this.handleDismiss}> Server Error </Alert> : null}
                 <div class="form-group">
-                    <label for="exampleInputEmail1">Username</label>
-                    <input type="name" name="username" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter username" onChange={this.handleChange}/>
+                        <label for="exampleInputEmail1">Username</label>
+                        <input type="text" name="username" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter username" onChange={this.handleChange} />
                 </div>
                 <div class="form-group">
                     <label for="exampleInputPassword1">Password</label>
