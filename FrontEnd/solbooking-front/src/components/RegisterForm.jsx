@@ -16,7 +16,7 @@ export default class RegisterForm extends React.Component {
             noPassword: false
 
         }
-        this.handleSubmit = this.handleSubmit.bind(this)
+       
         this.handleDismiss = this.handleDismiss.bind(this)
     }
 

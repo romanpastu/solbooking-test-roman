@@ -40,7 +40,7 @@ export default class LoginPage extends React.Component {
             <div className="blurredBg"></div>
             <div class="formContainer">
                 <div className="titleContainer">
-                    <p class="title">MementoMori</p>
+                    <p class="title">SolBooking</p>
                 </div>
                 <div className="formIn">
                     <div className="selectorContainer">
