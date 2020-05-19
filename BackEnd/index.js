@@ -188,7 +188,7 @@ app.post('/refresh_token', (req, res) => {
 
 //HOTEL RELATED ROUTES
 //get hotel list based on user id
-app.get('/user/:id/hotel-list', async (req, res) => {
+app.get('/user/:id/hotel-list',requireLogin, async (req, res) => {
   const userId = req.params.id;
   db.query("SELECT hotels.* from users inner join users_hotels on users.id=users_hotels.id_user inner join hotels on hotels.id=users_hotels.id_hotel where users.id='" + userId + "'").then(data => {
     console.log(data)
@@ -200,7 +200,7 @@ app.get('/user/:id/hotel-list', async (req, res) => {
 })
 
 //register a new hotel
-app.post('/hotel/register', async (req, res) => {
+app.post('/hotel/register', requireLogin,async (req, res) => {
   const { name, address, phone, mail } = req.body;
 
   //checks if the mail is valid
@@ -219,7 +219,7 @@ app.post('/hotel/register', async (req, res) => {
 })
 
 //Delete an hotel
-app.delete('/hotel/:id/delete', async (req, res) => {
+app.delete('/hotel/:id/delete',requireLogin, async (req, res) => {
   const hotelId = req.params.id;
   db.query("DELETE from hotels where id='" + hotelId + "';").then(data => {
     console.log(data)
@@ -231,7 +231,7 @@ app.delete('/hotel/:id/delete', async (req, res) => {
 })
 
 //Update hotel info
-app.post('/hotel/:id/update', async (req, res) => {
+app.post('/hotel/:id/update', requireLogin, async (req, res) => {
   const { name, address, phone, mail } = req.body
   const hotelId = req.params.id;
 
@@ -251,9 +251,7 @@ app.post('/hotel/:id/update', async (req, res) => {
   })
 })
 
-app.get('/require', requireLogin, async (req, res) => {
 
-})
 
 app.listen(3000, function () {
   console.log('Example app listening on port 3000!');
