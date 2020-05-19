@@ -24,7 +24,7 @@ const db = pgp(constants.dbUrl)
 
 //Login protection middleware for api
 function requireLogin(req, res, next) {
- 
+
   try {
 
     const userId = isAuth(req)
@@ -188,52 +188,61 @@ app.post('/refresh_token', (req, res) => {
 
 //HOTEL RELATED ROUTES
 //get hotel list based on user id
-app.get('/user/:id/hotel-list', async(req,res) =>{
+app.get('/user/:id/hotel-list', async (req, res) => {
   const userId = req.params.id;
-  db.query("SELECT hotels.* from users inner join users_hotels on users.id=users_hotels.id_user inner join hotels on hotels.id=users_hotels.id_hotel where users.id='"+userId+"'").then(data =>{
+  db.query("SELECT hotels.* from users inner join users_hotels on users.id=users_hotels.id_user inner join hotels on hotels.id=users_hotels.id_hotel where users.id='" + userId + "'").then(data => {
     console.log(data)
     res.send(data)
-  }).catch(err =>{
+  }).catch(err => {
     res.send(err)
     console.log(err)
   })
 })
 
 //register a new hotel
-app.post('/hotel/register', async(req,res) =>{
+app.post('/hotel/register', async (req, res) => {
   const { name, address, phone, mail } = req.body;
-  db.query("INSERT INTO hotels (name, address, phone, mail) VALUES ('" + name + "','" + address + "','" + phone + "','" + mail + "')").then(data =>{
+
+  //checks if the mail is valid
+  if ((mail.match(/@/g) || []).length != 1) {
+    res.status(401).send("invalid mail")
+    throw new Error("Invalid mail");
+  };
+
+  db.query("INSERT INTO hotels (name, address, phone, mail) VALUES ('" + name + "','" + address + "','" + phone + "','" + mail + "')").then(data => {
     console.log(data)
     res.status(200).send("inserted")
-  }).catch(err =>{
+  }).catch(err => {
     console.log(err)
     res.status(400).send(err)
   })
 })
 
 //Delete an hotel
-app.delete('/hotel/:id/delete', async (req,res) =>{
+app.delete('/hotel/:id/delete', async (req, res) => {
   const hotelId = req.params.id;
-  db.query("DELETE from hotels where id='"+hotelId+"';").then(data =>{
+  db.query("DELETE from hotels where id='" + hotelId + "';").then(data => {
     console.log(data)
     res.status(200).send("deleted")
-  }).catch(err =>{
+  }).catch(err => {
     console.log(err)
     res.status(400).send(err)
   })
 })
 
 //Update hotel info
-app.post('/hotel/:id/update', async (req,res) =>{
-  const {name, address, phone, mail} = req.body
+app.post('/hotel/:id/update', async (req, res) => {
+  const { name, address, phone, mail } = req.body
   const hotelId = req.params.id;
 
-  if((mail.match(/@/g) || []).length != 1){
+  //checks if the mail is valid
+  if ((mail.match(/@/g) || []).length != 1) {
     res.status(401).send("invalid mail")
     throw new Error("Invalid mail");
   };
 
-  db.query("UPDATE hotels SET name= '"+name+"' , address = '"+address+"', phone = '"+phone+"', mail = '"+mail+"' where id = '"+hotelId+"'").then(data =>{
+  //updates the mail
+  db.query("UPDATE hotels SET name= '" + name + "' , address = '" + address + "', phone = '" + phone + "', mail = '" + mail + "' where id = '" + hotelId + "'").then(data => {
     console.log(data);
     res.status(200).send("updated")
   }).catch(err => {
@@ -242,8 +251,8 @@ app.post('/hotel/:id/update', async (req,res) =>{
   })
 })
 
-app.get('/require', requireLogin, async(req,res) =>{
-  
+app.get('/require', requireLogin, async (req, res) => {
+
 })
 
 app.listen(3000, function () {
