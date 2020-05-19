@@ -1,5 +1,4 @@
 require('dotenv/config')
-let constants = require('./constants.js')
 
 //express use settings
 const express = require("express");
@@ -18,9 +17,9 @@ const { createAccessToken, createRefreshToken, sendAccessToken } = require('./to
 const { isAuth } = require('./isAuth.js')
 const { refresh } = require('./refresh.js')
 const { isAuthRefreshed } = require('./isAuthRefreshed.js')
-//db settings
-const pgp = require("pg-promise")();
-const db = pgp(constants.dbUrl)
+
+//Database settings
+const {db} = require('./database.js')
 
 //Login protection middleware for api
 function requireLogin(req, res, next) {
