@@ -1,0 +1,69 @@
+Prueba técnica
+
+1) Crear el siguiente esquema de BBDD:
+	Users
+		- Id
+		- Username
+		- Password
+		- Name
+
+	Hotels
+		- Id
+		- Name
+		- Address
+		- Phone
+		- Mail
+
+	Consideraciones:	
+		- Teniendo en cuenta que el id debe ser único para la tabla users y hotels
+		- Teniendo en cuenta que el username debe ser único para la tabla users
+		- Teniendo en cuenta que el name debe ser único para la tabla hotels
+		- Teniendo en cuenta que un usuario tiene muchos hoteles
+
+
+2) Desarrollar una API Restful en NodeJS usando Express que permita:
+
+	- Realizar login
+	- Obtener listado de hoteles del usuario
+	- Registrar un hotel
+	- Eliminar un hotel
+	- Editar un hotel
+	- Tenga control de errores
+	- Puede usar el esquema anterior o crearse una fake API donde los datos estén moqueados.
+
+3) Desarrollar una aplicación en ReactJS v.16 que cumpla las siguientes especificaciones:
+
+	- La aplicación arrancará mostrando un formulario de login donde el usuario podrá introducir su username y password para iniciar sesión. Si los datos son incorrectos se mostrará un aviso al usuario indicando que "El nombre de usuario y/o password no son válidos".
+	- Si el login es correcto la aplicació navegará al DashBoard:
+		- En la parte superior del dashboard aparecerá el mensaje "Bienvenid@ XXXX" Donde XXXX será el Name del usuario.
+		- Un filtro para que el usuario pueda filtrar el listado de hoteles por nombre y/o dirección.
+		- En la parte central del dashboard aparecerá, en este órden:
+			- Un título h3 con el texto "Listado de hoteles"
+			- Una tabla con el listado de hoteles. Esta tabla contendrá las siguientes columnas:
+				- #: Mostrará el ID del hotel
+				- Name: Mostrará el nombre del hotel
+				- Address: Mostrará la dirección del hotel
+				- Phone: Mostrará el teléfono del hotel
+				- Mail: Mostrará el correo electrónico del hotel
+				- Actions: Mostrará una botonera con las acciones:
+					- Eliminar hotel: Al pulsarlo el sistema pedirá confirmación y posteriormente, si selecciona que si, eliminará el hotel del listado.
+					- Editar hotel: Al pulsarlo el sistema navegará a una página de edición del hotel donde podrá editar todos los campos del hotel a excepción del Id que será solo de consulta y estará bloqueado para su edición. El campo Email debe tener un formato correcto.						
+			- Una paginación para navegar por la tabla de hoteles (10 resultados por página)
+			- Un botón añadir hotel: Al pulsarlo el sistema navegará a una página de alta de hotel donde el usuario podrá introducir todos los campos del hotel a excepción del Id que se asigna por el sistema de manera automática. El campo email debe tener un formato correcto.
+			- Si se añade/edita un hotel, el listado debe actualizarse con la nueva información.
+	
+La prueba debe ser entregada mediante repositorio en Git y con las instrucciones necesarias para realizar el despliegue correcto del aplicativo.
+
+Puntos que se valorarán positivamente:
+
+	- Código claro
+	- Código comentado
+	- El uso del inglés tanto en la declaración de variables, funciones, clases, etc, como en comentarios del código.
+	- Estructura del proyecto clara, bien definida.
+	- Utilización de hooks en ReactJS.
+	- Aplicación responsive: 
+		- Formulario de login adaptativo
+		- La tabla que muestra el listado de hoteles cambie por otro componente a modo de tarjetas sin perder funcionalidad.
+	- Aplicación de estilos utilizando Sass
+	- Que se proporcione un enlace web donde ver el aplicativo funcionando.
+
