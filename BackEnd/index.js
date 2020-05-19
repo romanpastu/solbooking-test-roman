@@ -210,6 +210,18 @@ app.post('/hotel/register', async(req,res) =>{
   })
 })
 
+//Delete an hotel
+app.delete('/hotel/:id/delete', async (req,res) =>{
+  const hotelId = req.params.id;
+  db.query("DELETE from hotels where id='"+hotelId+"';").then(data =>{
+    console.log(data)
+    res.status(200).send("deleted")
+  }).catch(err =>{
+    console.log(err)
+    res.status(400).send(err)
+  })
+})
+
 app.get('/require', requireLogin, async(req,res) =>{
   
 
