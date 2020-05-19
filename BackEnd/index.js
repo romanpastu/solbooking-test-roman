@@ -228,6 +228,11 @@ app.post('/hotel/:id/update', async (req,res) =>{
   const {name, address, phone, mail} = req.body
   const hotelId = req.params.id;
 
+  if((mail.match(/@/g) || []).length != 1){
+    res.status(401).send("invalid mail")
+    throw new Error("Invalid mail");
+  };
+
   db.query("UPDATE hotels SET name= '"+name+"' , address = '"+address+"', phone = '"+phone+"', mail = '"+mail+"' where id = '"+hotelId+"'").then(data =>{
     console.log(data);
     res.status(200).send("updated")
