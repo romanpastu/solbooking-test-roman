@@ -73,8 +73,9 @@ app.post('/register', async (req, res) => {
 })
 
 app.post('/login', async (req, res) => {
-  const { username, password } = req.body;
-
+  const { nickname, password } = req.body;
+  const username = nickname
+  
   try {
     //selects the user from the db
     var user = "";
@@ -91,9 +92,8 @@ app.post('/login', async (req, res) => {
         res.status(401).send("Password not correct");
         throw new Error("Password not correct")
       }
-
       //creates the accessToken, and the refreshToken for the user
-      const accessToken = createAccessToken(user[0].id)
+      const accessToken = createAccessToken(user[0].id, user[0].name)
       const refreshToken = createRefreshToken(user[0].id)
       //Sets the refreshtoken of the user, and send the accesstoken to the client
       db.query("UPDATE users SET refresh_token = '" + refreshToken + "' WHERE id = '" + user[0].id + "';").then(function (data) {
@@ -166,7 +166,7 @@ app.post('/refresh_token', (req, res) => {
       }
 
       //if token exist create a new Refresh and Accestoken
-      const accesstoken = createAccessToken(user[0].id);
+      const accesstoken = createAccessToken(user[0].id, user[0].name);
       const refreshtoken = createRefreshToken(user[0].id);
 
       db.query("UPDATE users SET refresh_token = '" + refreshtoken + "' WHERE id = '" + user[0].id + "';").then(function (data) {
