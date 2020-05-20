@@ -13,6 +13,13 @@ export default class LoginPage extends React.Component {
         this.displayRegister = this.displayRegister.bind(this);
     }
 
+    componentDidMount(){
+        //if the user was already authed, it should be autoredirected to the dashboard
+        if(this.props.authed){
+            this.props.history.push('/dashboard')
+        }
+    }
+
     displayLogin() {
         this.setState({
             displayLogin: true
