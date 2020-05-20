@@ -32,8 +32,24 @@ class LoginForm extends React.Component {
     }
 
     handleSubmit = function(event){
+        this.setState({
+            serverError: false,
+            wrongCombo: false
+        })
         event.preventDefault();
-        this.props.login(this.state.username, this.state.password)
+        this.props.login(this.state.username, this.state.password).then(res => {
+
+        }).catch(err => {
+           if(err == "Network error"){
+                this.setState({
+                    serverError: true
+                })
+            }else{
+                this.setState({
+                    wrongCombo: true
+                })
+            }
+        })
     }
 
 

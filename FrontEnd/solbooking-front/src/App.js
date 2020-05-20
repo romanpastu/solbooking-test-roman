@@ -73,13 +73,19 @@ class App extends React.Component {
             resolve(true)
           } else{
             this.setState({isAuthenticated:false, authenticationChecked: true})
-            if(res.data == "error"){
-              reject("error")
-            }else if (res.data.code == "ETIMEDOUT"){
-              reject("Network error");
-            }
+            // if(res.data == "error"){
+            //   reject("error")
+            // }else if (res.data.code == "ETIMEDOUT"){
+            //   reject("Network error");
+            // }
           }
         })
+      }).catch(err =>{
+        if (err == "Error: Network Error") {
+          reject("Network error");
+        }else{
+          reject(err)
+        }
       })
       
     })

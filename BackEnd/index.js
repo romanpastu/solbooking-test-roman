@@ -114,10 +114,12 @@ app.post('/login', async (req, res) => {
         console.log("ERROR: ", error)
       })
     }).catch(function (error) {
+      console.log("esto¿?")
       console.log("ERROR: ", error)
       res.send(error)
     })
   } catch (err) {
+    
     res.send({
       error: `${err.message}`
     })
