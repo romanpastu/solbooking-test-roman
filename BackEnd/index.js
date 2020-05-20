@@ -54,15 +54,12 @@ function requireLogin(req, res, next) {
 }
 
 
-app.get('/', function (req, res) {
-  res.send('Hello World!');
-});
 
 //USER AUTH RELATED ROUTES
 app.post('/register', async (req, res) => {
-  const { username, password, name } = req.body
+  const { username, name, password, password2 } = req.body
   //hashes the password and inserts the user in the DB.
-  const hashedPassword = await hash(password, 10);
+  const hashedPassword = await hash(password2, 10);
   db.query("INSERT INTO users (username, password, name) VALUES ('" + username + "','" + hashedPassword + "','" + name + "')").then(data => {
     console.log(data)
     res.status(200).send("success")

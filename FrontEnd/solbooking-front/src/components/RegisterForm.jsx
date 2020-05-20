@@ -1,13 +1,15 @@
 import React from 'react'
 import { Alert } from 'react-bootstrap'
-
+import axios from 'axios'
+import constants from "../constants.js"
+import qs from 'qs'
 export default class RegisterForm extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
             email: "",
             username: "",
-            fullName: "",
+            name: "",
             password1: "",
             password2: "",
             passwordsMustBeEqual: false,
@@ -18,6 +20,7 @@ export default class RegisterForm extends React.Component {
         }
        
         this.handleDismiss = this.handleDismiss.bind(this)
+        this.handleSubmit = this.handleSubmit.bind(this)
     }
 
     handleChange = (evt) => {
@@ -29,6 +32,22 @@ export default class RegisterForm extends React.Component {
             [name]: value
         });
 
+    }
+
+    handleSubmit = function (event){
+        const {username, name, password1, password2} = this.state
+        event.preventDefault();
+        axios({
+            method: 'post',
+            url: constants.urlBackend + "/register",
+            data: qs.stringify({username, name, password1, password2}),
+            headers: {
+                'content-type': 'application/x-www-form-urlencoded;charset=utf-8'
+            }
+        }).then((res) =>{
+            console.log(res)
+            this.props.login(username,password2)
+        })
     }
 
     handleDismiss(){
@@ -54,7 +73,7 @@ export default class RegisterForm extends React.Component {
                     </div>
                     <div class="form-group">
                         <label for="exampleInputEmail1">Full Name</label>
-                        <input type="text" name="fullName" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter Full Name" onChange={this.handleChange} />
+                        <input type="text" name="name" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter Full Name" onChange={this.handleChange} />
                     </div>
                     <div class="form-group">
                         <label for="exampleInputPassword1">Password</label>
