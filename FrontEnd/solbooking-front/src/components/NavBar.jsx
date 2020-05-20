@@ -20,7 +20,7 @@ class Navbar extends Component {
     }
 
     logout(){
-        console.log("logged out")
+        this.props.logout();
     }
 
     render(){

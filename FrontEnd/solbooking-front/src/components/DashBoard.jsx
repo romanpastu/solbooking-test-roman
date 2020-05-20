@@ -13,7 +13,7 @@ export default class DashBoard extends React.Component {
     render(){
         return(
             <div>
-                <NavBar />
+                <NavBar logout={this.props.logout}/>
                 <div>
                     Hello world
                 </div>

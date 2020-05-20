@@ -78,13 +78,25 @@ class App extends React.Component {
     })
   }
 
+  logout = () => {
+    Cookies.remove('accesstoken')
+    this.setState({
+      isAuthenticated : false,
+      authenticationChecked: true
+    }, () =>{
+      this.props.setUserName("")
+      this.props.history.push("/")
+    })
+    
+  }
+
   render() {
     if (!this.state.authenticationChecked) return null;
     return(
       <div>
         <Switch>
           <Route exact path="/" render={(props) => <LoginPage {...props} login={this.login} authed={this.state.isAuthenticated}/>}></Route>
-          <PrivateRoute authed={this.state.isAuthenticated} path="/dashboard" render={() => <DashBoard {...this.props}/>}></PrivateRoute>
+          <PrivateRoute authed={this.state.isAuthenticated} path="/dashboard" render={() => <DashBoard {...this.props} logout={this.logout}/>}></PrivateRoute>
           <Route path="/" render={(props) => this.props.history.push("/")} />  
         </Switch>
       </div>
