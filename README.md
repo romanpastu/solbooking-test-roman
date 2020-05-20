@@ -1,5 +1,11 @@
 # Take home test for www.solbooking.com
 
+**Deployed app**
+http://solbooking.romanpastu.com/
+
+- Preloaded user : roman | roman
+
+
 **Database Schema**
 
 ![Database Schema](https://github.com/romanpastu/solbooking-test-roman/blob/master/imagenes/schema.png?raw=true)
