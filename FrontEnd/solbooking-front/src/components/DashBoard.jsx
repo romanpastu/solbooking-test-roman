@@ -30,12 +30,27 @@ export default class DashBoard extends React.Component {
         this.closeDeleteHotelModal = this.closeDeleteHotelModal.bind(this)
         this.showEditHotelModal = this.showEditHotelModal.bind(this)
         this.closeEditHotelModal = this.closeEditHotelModal.bind(this)
+        this.handleSubmitHotelEdit = this.handleSubmitHotelEdit.bind(this)
     }
 
     componentDidMount() {
         this.getHotelList();
     }
-    //handleChange Functions
+
+    //Gets the hotel list
+    getHotelList() {
+        API.get(constants.urlBackend + "/user/6/hotel-list").then(res => {
+            this.setState({
+                hotelList: res.data
+            }, () => {
+                console.log(this.state.hotelList)
+            })
+        }).catch(err => {
+            console.log(err)
+        })
+    }
+
+    //handleChange Functions For the Hotel Edit
     handleChangeName = (evt) => {
         this.setState({
             editHotelInfo: Object.assign({}, this.state.editHotelInfo, {hotelName: evt.target.value})
@@ -57,17 +72,24 @@ export default class DashBoard extends React.Component {
         })
     }
 
-    getHotelList() {
-        API.get(constants.urlBackend + "/user/6/hotel-list").then(res => {
-            this.setState({
-                hotelList: res.data
-            }, () => {
-                console.log(this.state.hotelList)
-            })
+    //handleSubmit for the Hotel Edit
+    handleSubmitHotelEdit(event){
+        event.preventDefault();
+
+        var name = this.state.editHotelInfo.hotelName
+        var address = this.state.editHotelInfo.hotelAddres
+        var phone = this.state.editHotelInfo.hotelPhone
+        var mail = this.state.editHotelInfo.hotelMail
+        
+        API.post(constants.urlBackend+"/hotel/"+this.state.rowId+"/update",{name, address, phone, mail}).then( res =>{
+            console.log(res)
+            this.getHotelList();
         }).catch(err => {
             console.log(err)
         })
     }
+
+    
 
     deleteHotel() {
 
@@ -167,6 +189,7 @@ export default class DashBoard extends React.Component {
                 handleChangeMail={this.handleChangeMail}
                 handleChangePhone={this.handleChangePhone}
                 handleChangeAddress={this.handleChangeAddress}
+                handleSubmit={this.handleSubmitHotelEdit}
                 rowId={this.state.rowId} showEditHotelModal={this.state.showEditHotelModal} closeEditHotelModal={this.closeEditHotelModal} hotelInfo={this.state.editHotelInfo}
                 />
             </div>

@@ -25,6 +25,7 @@ class EditHotelModal extends React.Component {
             <div className="flex-container">
                 
                 <div id="open-modal" className="modal-window-1">
+                    <form onSubmit={this.props.handleSubmit}>
                     <FontAwesomeIcon className="headerClose" icon={faTimesCircle} onClick={this.props.closeEditHotelModal}/>
                     <div class="form-group">
                         <label for="exampleInputEmail1" className="label-color-edit">#</label>
@@ -51,7 +52,7 @@ class EditHotelModal extends React.Component {
                         <input type="email" name="mail" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" value={this.props.hotelInfo.hotelMail} onChange={this.props.handleChangeMail}/>
                     </div>
                     <div className="text-center"><button className="btn btn-primary">Update Hotel</button></div>
-
+                    </form>
                 </div>
             </div>
         </div>
