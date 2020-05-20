@@ -14,6 +14,8 @@ class LoginForm extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this)
     }
 
+    
+
     handleChange = (evt) => {
         const target = evt.target;
         const value = target.value;

@@ -22,7 +22,9 @@ class CreateHotelModal extends React.Component {
         }
         this.handleSubmit = this.handleSubmit.bind(this)
         this.handleDismiss = this.handleDismiss.bind(this)
+        this.onClick = this.onClick.bind(this)
     }
+
 
     //handleSubmit for the Hotel Creation
     handleSubmit(event) {
@@ -40,12 +42,12 @@ class CreateHotelModal extends React.Component {
 
             this.props.getHotelList()
         }).catch(err => {
-            
+
             if (err == "Error: Request failed with status code 401") {
                 this.setState({
                     wrongEmail: true
                 })
-            }else if(err = "Error: Network Error"){
+            } else if (err = "Error: Network Error") {
                 this.setState({
                     networkError: true
                 })
@@ -60,6 +62,14 @@ class CreateHotelModal extends React.Component {
         })
     }
 
+    onClick(){
+        this.setState({
+            wrongEmail: false,
+            networkError: false
+        })
+        this.props.closeCreateHotelModal()
+    }
+
     render() {
         if (!this.props.showCreateHotelModal) {
             return null;
@@ -70,8 +80,8 @@ class CreateHotelModal extends React.Component {
 
                 <div id="open-modal" className="modal-window-1">
                     <form onSubmit={this.handleSubmit}>
-                        <FontAwesomeIcon className="headerClose" icon={faTimesCircle} onClick={this.props.closeCreateHotelModal} />
-                        <div style={{marginTop: "20px"}}>
+                        <FontAwesomeIcon className="headerClose" icon={faTimesCircle} onClick={this.onClick} />
+                        <div style={{ marginTop: "20px" }}>
                             {this.state.wrongEmail ? <Alert variant="danger" dismissible onClose={this.handleDismiss}> Wrong email format </Alert> : null}
                             {this.state.networkError ? <Alert variant="danger" dismissible onClose={this.handleDismiss}> Network Error </Alert> : null}
                         </div>
