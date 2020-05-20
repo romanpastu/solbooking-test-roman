@@ -15,7 +15,7 @@
 # How to deploy
 - Clone the repository
 - Setup a postgresql12 database
-- Import the database backup file using pgAdmin4 `https://github.com/romanpastu/solbooking-test-roman/blob/master/database/SolBookingBackup.tar ` 
+- Import the database backup file using pgAdmin4 `https://github.com/romanpastu/solbooking-test-roman/blob/master/database/SolBookingBackup.tar ` , or use the creation script `https://github.com/romanpastu/solbooking-test-roman/blob/master/database/creation-script.sql`
 - Create a .env file in the BackEnd directory, it should look like /BackEnd/.env
 - .env file should contain the following
   ```
