@@ -17,7 +17,7 @@ export default class DashBoard extends React.Component {
             showDeleteHotelModal: false,
             showEditHotelModal: false,
             editHotelInfo: {
-                hotelName: "juan",
+                hotelName: "",
                 hotelAddres: "",
                 hotelPhone: "",
                 hotelMail: ""
@@ -34,6 +34,27 @@ export default class DashBoard extends React.Component {
 
     componentDidMount() {
         this.getHotelList();
+    }
+    //handleChange Functions
+    handleChangeName = (evt) => {
+        this.setState({
+            editHotelInfo: Object.assign({}, this.state.editHotelInfo, {hotelName: evt.target.value})
+        })
+    }
+    handleChangeAddress = (evt) => {
+        this.setState({
+            editHotelInfo: Object.assign({}, this.state.editHotelInfo, {hotelAddres: evt.target.value})
+        })
+    }
+    handleChangePhone = (evt) => {
+        this.setState({
+            editHotelInfo: Object.assign({}, this.state.editHotelInfo, {hotelPhone: evt.target.value})
+        })
+    }
+    handleChangeMail = (evt) => {
+        this.setState({
+            editHotelInfo: Object.assign({}, this.state.editHotelInfo, {hotelMail: evt.target.value})
+        })
     }
 
     getHotelList() {
@@ -141,7 +162,13 @@ export default class DashBoard extends React.Component {
                     })}
                 </Table>
                 <DeleteHotelModal showDeleteHotelModal={this.state.showDeleteHotelModal} closeDeleteHotelModal={this.closeDeleteHotelModal} deleteHotel={this.deleteHotel} />
-                <EditHotelModal rowId={this.state.rowId} showEditHotelModal={this.state.showEditHotelModal} closeEditHotelModal={this.closeEditHotelModal} hotelInfo={this.state.editHotelInfo}/>
+                <EditHotelModal 
+                handleChangeName={this.handleChangeName}
+                handleChangeMail={this.handleChangeMail}
+                handleChangePhone={this.handleChangePhone}
+                handleChangeAddress={this.handleChangeAddress}
+                rowId={this.state.rowId} showEditHotelModal={this.state.showEditHotelModal} closeEditHotelModal={this.closeEditHotelModal} hotelInfo={this.state.editHotelInfo}
+                />
             </div>
         )
     }

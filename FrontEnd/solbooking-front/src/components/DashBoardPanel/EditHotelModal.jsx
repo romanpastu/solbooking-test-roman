@@ -33,22 +33,22 @@ class EditHotelModal extends React.Component {
 
                     <div class="form-group">
                         <label for="exampleInputEmail1" className="label-color-edit">Name</label>
-                        <input type="name" name="name" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter name" value={this.props.hotelInfo.hotelName} />
+                        <input type="name" name="name" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter name" value={this.props.hotelInfo.hotelName} onChange={this.props.handleChangeName}/>
                     </div>
 
                     <div class="form-group">
                         <label for="exampleInputEmail1" className="label-color-edit">Address</label>
-                        <input type="name" name="address" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter address" value={this.props.hotelInfo.hotelAddres}/>
+                        <input type="name" name="address" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter address" value={this.props.hotelInfo.hotelAddres} onChange={this.props.handleChangeAddress}/>
                     </div>
 
                     <div class="form-group">
                         <label for="exampleInputEmail1" className="label-color-edit">Phone</label>
-                        <input type="text" name="phone" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter phone" value={this.props.hotelInfo.hotelPhone}/>
+                        <input type="text" name="phone" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter phone" value={this.props.hotelInfo.hotelPhone} onChange={this.props.handleChangePhone}/>
                     </div>
 
                     <div class="form-group">
                         <label for="exampleInputEmail1" className="label-color-edit">Mail</label>
-                        <input type="email" name="mail" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" value={this.props.hotelInfo.hotelMail}/>
+                        <input type="email" name="mail" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" value={this.props.hotelInfo.hotelMail} onChange={this.props.handleChangeMail}/>
                     </div>
                     <div className="text-center"><button className="btn btn-primary">Update Hotel</button></div>
 
