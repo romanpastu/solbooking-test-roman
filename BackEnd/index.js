@@ -57,7 +57,22 @@ function requireLogin(req, res, next) {
 
 //USER AUTH RELATED ROUTES
 app.post('/register', async (req, res) => {
-  const { username, name, password, password2 } = req.body
+  const { username, name, password1, password2 } = req.body
+ 
+  if (password1 != password2) {
+    res.status(400).send(new Error('Passwords must be equal'));
+  }
+  if (password2 == '') {
+    res.status(401).send(new Error('Theres no password'));
+  }
+  if (username == '') {
+    res.status(402).send(new Error('You must specify an username'))
+  }
+  if (name == '') {
+    res.status(403).send(new Error('You must specify a name'))
+  }
+  
+  
   //hashes the password and inserts the user in the DB.
   const hashedPassword = await hash(password2, 10);
   db.query("INSERT INTO users (username, password, name) VALUES ('" + username + "','" + hashedPassword + "','" + name + "')").then(data => {

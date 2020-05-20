@@ -13,9 +13,10 @@ export default class RegisterForm extends React.Component {
             password1: "",
             password2: "",
             passwordsMustBeEqual: false,
-            wrongEmail: false,
-            noFullName: false,
-            noPassword: false
+            noName: false,
+            noUsername: false,
+            noPassword: false,
+            networkError: false
 
         }
        
@@ -35,6 +36,12 @@ export default class RegisterForm extends React.Component {
     }
 
     handleSubmit = function (event){
+        this.setState({
+            passwordsMustBeEqual: false,
+            noPassword: false,
+            noUsername: false,
+            noName: false
+        })
         const {username, name, password1, password2} = this.state
         event.preventDefault();
         axios({
@@ -45,17 +52,42 @@ export default class RegisterForm extends React.Component {
                 'content-type': 'application/x-www-form-urlencoded;charset=utf-8'
             }
         }).then((res) =>{
-            console.log(res)
-            this.props.login(username,password2)
+            console.log(res.status)
+            // this.props.login(username,password2)
+        }).catch(err => {
+            if (!err.status) {
+                this.setState({
+                    networkError: true
+                })
+            }else{
+                if(err.response.status == 400){
+                    this.setState({
+                        passwordsMustBeEqual: true
+                    })
+                }else if(err.response.status == 401){
+                    this.setState({
+                        noPassword: true
+                    })
+                }else if(err.response.status == 402){
+                    this.setState({
+                        noUsername: true
+                    })
+                }else if(err.response.status == 403){
+                    this.setState({
+                        noName : true
+                    })
+                }
+            }
         })
     }
 
     handleDismiss(){
         this.setState({
             passwordsMustBeEqual: false,
-            wrongEmail: false,
-            noFullName: false,
-            noPassword: false
+            noUsername: false,
+            noName: false,
+            noPassword: false,
+            networkError: false
         })
     }
 
@@ -64,9 +96,10 @@ export default class RegisterForm extends React.Component {
             <div>
                 <form>
                 {this.state.passwordsMustBeEqual ? <Alert variant="danger" dismissible onClose={this.handleDismiss}> Passwords must be equal </Alert> : null}
-                {this.state.wrongEmail ? <Alert variant="danger" dismissible onClose={this.handleDismiss}> Wrong email </Alert> : null}
-                {this.state.noFullName ? <Alert variant="danger" dismissible onClose={this.handleDismiss}> You must input a first name </Alert> : null}
+                {this.state.noName ? <Alert variant="danger" dismissible onClose={this.handleDismiss}> You must input a full name </Alert> : null}
+                {this.state.noUsername ? <Alert variant="danger" dismissible onClose={this.handleDismiss}> You must input an username </Alert> : null}
                 {this.state.noPassword ? <Alert variant="danger" dismissible onClose={this.handleDismiss}> Theres no password </Alert> : null}
+                {this.state.networkError ? <Alert variant="danger" dismissible onClose={this.handleDismiss}> Network Error </Alert> : null}
                     <div class="form-group">
                         <label for="exampleInputEmail1">Username</label>
                         <input type="text" name="username" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter username" onChange={this.handleChange} />
