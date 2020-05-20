@@ -11,8 +11,7 @@ class EditHotelModal extends React.Component {
         this.state = {
 
         }
-        console.log("some props")
-        console.log(this.props.hotelInfo)
+      
     }
 
 

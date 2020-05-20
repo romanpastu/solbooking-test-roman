@@ -44,7 +44,6 @@ class App extends React.Component {
     });
 
     this.props.setUserName(getUserName())
-    console.log("did it get set?")
     this.props.setUserId(getUserId())
     
   }

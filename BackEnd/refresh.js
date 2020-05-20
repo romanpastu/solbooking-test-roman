@@ -38,7 +38,6 @@ const refresh = async (req) => {
                 const refreshtoken = createRefreshToken(user[0].id);
 
                 return db.query("UPDATE users SET refresh_token = '" + refreshtoken + "' WHERE id = '" + user[0].id + "';").then(function (data) {
-                    // sendRefreshToken(res, refreshtoken); //unnecesary
                     return { accesstoken };
                 }).catch(function (error) {
                     console.log("ERROR: ", error)

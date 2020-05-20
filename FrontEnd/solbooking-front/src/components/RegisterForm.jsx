@@ -52,7 +52,7 @@ export default class RegisterForm extends React.Component {
                 'content-type': 'application/x-www-form-urlencoded;charset=utf-8'
             }
         }).then((res) =>{
-            console.log(res.status)
+            
             // this.props.login(username,password2)
         }).catch(err => {
             if (!err.status) {
@@ -100,24 +100,24 @@ export default class RegisterForm extends React.Component {
                 {this.state.noUsername ? <Alert variant="danger" dismissible onClose={this.handleDismiss}> You must input an username </Alert> : null}
                 {this.state.noPassword ? <Alert variant="danger" dismissible onClose={this.handleDismiss}> Theres no password </Alert> : null}
                 {this.state.networkError ? <Alert variant="danger" dismissible onClose={this.handleDismiss}> Network Error </Alert> : null}
-                    <div class="form-group">
-                        <label for="exampleInputEmail1">Username</label>
-                        <input type="text" name="username" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter username" onChange={this.handleChange} />
+                    <div className="form-group">
+                        <label htmlFor="exampleInputEmail1">Username</label>
+                        <input type="text" name="username" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter username" onChange={this.handleChange} />
                     </div>
-                    <div class="form-group">
-                        <label for="exampleInputEmail1">Full Name</label>
-                        <input type="text" name="name" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter Full Name" onChange={this.handleChange} />
+                    <div className="form-group">
+                        <label htmlFor="exampleInputEmail1">Full Name</label>
+                        <input type="text" name="name" className="form-control" id="exampleInputEmail2" aria-describedby="emailHelp" placeholder="Enter Full Name" onChange={this.handleChange} />
                     </div>
-                    <div class="form-group">
-                        <label for="exampleInputPassword1">Password</label>
-                        <input type="password" name="password1" class="form-control" id="exampleInputPassword1" placeholder="Password" onChange={this.handleChange} />
+                    <div className="form-group">
+                        <label htmlFor="exampleInputPassword1">Password</label>
+                        <input type="password" name="password1" className="form-control" id="exampleInputPassword1" placeholder="Password" onChange={this.handleChange} />
                     </div>
-                    <div class="form-group">
-                        <input type="password" name="password2" class="form-control" id="exampleInputPassword1" placeholder="Confirm Password" onChange={this.handleChange} />
+                    <div className="form-group">
+                        <input type="password" name="password2" className="form-control" id="exampleInputPassword2" placeholder="Confirm Password" onChange={this.handleChange} />
                     </div>
 
                     <div className="text-center buttonContainer">
-                        <button type="submit" class="btn btn-primary buttonLogin" onClick={this.handleSubmit}>Submit</button>
+                        <button type="submit" className="btn btn-primary buttonLogin" onClick={this.handleSubmit}>Submit</button>
                     </div>
                 </form>
             </div>

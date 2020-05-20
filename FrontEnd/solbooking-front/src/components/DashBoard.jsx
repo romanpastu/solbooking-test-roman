@@ -62,10 +62,10 @@ class DashBoard extends React.Component {
             this.setState({
                 hotelList: res.data
             }, () => {
-                console.log(this.state.hotelList)
+               
             })
         }).catch(err => {
-            console.log(err)
+            
         })
     }
 
@@ -104,7 +104,7 @@ class DashBoard extends React.Component {
         var mail = this.state.editHotelInfo.hotelMail
         
         API.post(constants.urlBackend+"/hotel/"+this.state.rowId+"/update",{name, address, phone, mail}).then( res =>{
-            console.log(res)
+            
             this.getHotelList();
         }).catch(err => {
             if (err == "Error: Request failed with status code 401") {
@@ -116,7 +116,7 @@ class DashBoard extends React.Component {
                     networkErrorEditHotelModal: true
                 })
             }
-            console.log(err)
+           
         })
     }
 
@@ -133,11 +133,11 @@ class DashBoard extends React.Component {
     deleteHotel() {
 
         API.delete(constants.urlBackend + "/hotel/" + this.state.rowId + "/delete").then(response => {
-            console.log(response)
+          
             this.getHotelList();
             this.closeDeleteHotelModal();
         }).catch(err => {
-            console.log(err)
+            
             if(err == "Error: Network Error"){
                 this.setState({
                     deleteNetworkError: true,
@@ -169,7 +169,7 @@ class DashBoard extends React.Component {
     }
 
     showCreateHotelModal() {
-        console.log("showed")
+       
         this.setState({
             showCreateHotelModal: true,
         })
