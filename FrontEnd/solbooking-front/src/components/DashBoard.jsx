@@ -232,7 +232,7 @@ class DashBoard extends React.Component {
                 <Table
                     className="table"
                     filterable={['Name', 'Address']}
-                    itesPerPage={10}
+                    itemsPerPage={10}
                     currentPage={0}
                     sortable={true}
                 >
