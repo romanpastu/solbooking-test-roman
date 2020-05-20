@@ -5,14 +5,20 @@ import constants from "../constants.js"
 import Reactable from "reactable"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrashAlt } from '@fortawesome/free-regular-svg-icons'
+import DeleteHotelModal from "./DashBoardPanel/DeleteHotelModal"
 import "./DashBoard.css"
 export default class DashBoard extends React.Component {
     constructor(props){
         super(props)
         this.state = {
-            hotelList: []
+            hotelList: [],
+            rowId: "",
+            showDeleteHotelModal: false
         }
     this.getHotelList = this.getHotelList.bind(this)
+    this.deleteHotel = this.deleteHotel.bind(this)
+    this.showDeleteHotelModal = this.showDeleteHotelModal.bind(this)
+    this.closeDeleteHotelModal = this.closeDeleteHotelModal.bind(this)
     }
 
     componentDidMount(){
@@ -29,6 +35,30 @@ export default class DashBoard extends React.Component {
        }).catch(err => {
            console.log(err)
        })
+    }
+
+    deleteHotel(){
+
+        API.post(constants.urlBackend+"/hotel/"+this.state.rowId+"/delete").then(response =>{
+            console.log(response)
+        }).catch(err => {
+            console.log(err)
+        })
+    }
+
+    showDeleteHotelModal(rowId) {
+        this.setState({
+            showDeleteHotelModal: true,
+            rowId: rowId
+        })
+    }
+
+    closeDeleteHotelModal() {
+        this.setState({
+            showDeleteHotelModal: false
+        }, () => {
+
+        })
     }
 
     render(){
@@ -63,12 +93,13 @@ export default class DashBoard extends React.Component {
                                 <Td column="Phone">{row.phone}</Td>
                                 <Td column="Mail">{row.mail}</Td>
                                 <Td column="Manage"><div><FontAwesomeIcon className="editIcon" onClick={() => console.log("hi")} icon={faEdit}></FontAwesomeIcon>
-                                    <FontAwesomeIcon className="editIcon" onClick={() => console.log("hi")} icon={faTrashAlt}></FontAwesomeIcon>
+                                    <FontAwesomeIcon className="editIcon" onClick={() => this.showDeleteHotelModal(row.id)} icon={faTrashAlt}></FontAwesomeIcon>
                                 </div></Td>
                             </Tr>
                         )
                     })}
                 </Table>
+                <DeleteHotelModal showDeleteHotelModal={this.state.showDeleteHotelModal} closeDeleteHotelModal={this.closeDeleteHotelModal}  deleteHotel={this.deleteHotel} />
             </div>
         )
     }
