@@ -11,11 +11,12 @@ import axios from 'axios'
 import isAuthenticated from './services/authService';
 import PrivateRoute from './components/PrivateRoute';
 import './App.css';
-import { setUserName } from "./redux/actions/reduxActions.js"
-import { getUserName } from "./services/userInfo.js"
+import { setUserName, setUserId } from "./redux/actions/reduxActions.js"
+import { getUserName, getUserId } from "./services/userInfo.js"
 function mapDispatchToProps(dispatch) {
   return {
-    setUserName: element => dispatch(setUserName(element))
+    setUserName: element => dispatch(setUserName(element)),
+    setUserId: element => dispatch(setUserId(element))
   }
 }
 
@@ -41,6 +42,11 @@ class App extends React.Component {
         this.setState({ isAuthenticated: false, authenticationChecked: true })
       }
     });
+
+    this.props.setUserName(getUserName())
+    console.log("did it get set?")
+    this.props.setUserId(getUserId())
+    
   }
 
   login = (nickname, password) =>{
@@ -60,6 +66,7 @@ class App extends React.Component {
         isAuthenticated().then((result) => {
           if(result === true){
             this.props.setUserName(getUserName())
+            this.props.setUserId(getUserId())
             this.setState({isAuthenticated: true, authenticationChecked: true}, () =>{
               this.props.history.push('/dashboard')
             })
