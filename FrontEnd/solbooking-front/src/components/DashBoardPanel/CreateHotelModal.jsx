@@ -8,9 +8,8 @@ import constants from '../../constants.js'
 import { Alert } from 'react-bootstrap'
 const mapStateToProps = state => {
     return {
-        userId: state.userId,
-        wrongEmail: false,
-        networkError: false
+        userId: state.userId
+        
     }
 }
 
@@ -18,7 +17,8 @@ class CreateHotelModal extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-
+            wrongEmail: false,
+            networkError: false
         }
         this.handleSubmit = this.handleSubmit.bind(this)
         this.handleDismiss = this.handleDismiss.bind(this)
