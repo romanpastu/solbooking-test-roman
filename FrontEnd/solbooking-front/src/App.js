@@ -1,26 +1,83 @@
 import React from 'react';
-import logo from './logo.svg';
+import LoginPage from "./components/LoginPage"
+import { Route, Switch , withRouter} from 'react-router-dom'
+import constants from './constants.js'
+import Cookies from 'js-cookie';
+import qs from 'qs'
+import axios from 'axios'
+import isAuthenticated from './services/authService';
+import PrivateRoute from './components/PrivateRoute'
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends React.Component {
+  constructor(props){
+    super(props)
+
+    this.state = { 
+      authenticationChecked: false,
+      isAuthenticated: false
+    }
+  }
+
+  componentDidMount(){
+    //when the app is mounted, without triggering the auth process, we must check the token in order to redirect it from undesired routes like /login, so we check the state onMount 
+    isAuthenticated().then((result) => {
+      if (result === true) {
+        this.setState({
+            isAuthenticated: true,
+            authenticationChecked: true
+          })
+      } else {
+        this.setState({ isAuthenticated: false, authenticationChecked: true })
+      }
+    });
+  }
+
+  login = (nickname, password) =>{
+    return new Promise((resolve, reject) => {
+      axios({
+        method: 'post',
+        url: constants.urlBackend + "/login",
+        data: qs.stringify({ nickname, password }),
+        headers: {
+          'content-type': 'application/x-www-form-urlencoded;charset=utf-8'
+        }
+      }).then((res)=> {
+        if(res.data.accesstoken != undefined){
+          Cookies.set('accesstoken', res.data.accesstoken)
+        }
+
+        isAuthenticated().then((result) => {
+          if(result === true){
+            this.setState({isAuthenticated: true, authenticationChecked: true}, () =>{
+              this.props.history.push('/dashboard')
+            })
+            resolve(true)
+          } else{
+            this.setState({isAuthenticated:false, authenticationChecked: true})
+            if(res.data == "error"){
+              reject("error")
+            }else if (res.data.code == "ETIMEDOUT"){
+              reject("Network error");
+            }
+          }
+        })
+      })
+      
+    })
+  }
+
+  render() {
+    if (!this.state.authenticationChecked) return null;
+    return(
+      <div>
+        <Switch>
+          <Route exact path="/" render={(props) => <LoginPage {...props} login={this.login} authed={this.state.isAuthenticated}/>}></Route>
+          <PrivateRoute authed={this.state.isAuthenticated} path="/dashboard" render={() => <div><p>Welcome to the dashboard</p></div>}></PrivateRoute> 
+        </Switch>
+      </div>
+    )
+  }
 }
 
-export default App;
+export default withRouter(App);
