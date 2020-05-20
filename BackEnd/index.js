@@ -223,6 +223,8 @@ console.log(name,address,phone,mail)
     throw new Error("Invalid mail");
   };
 
+
+
   db.query("INSERT INTO hotels (name, address, phone, mail) VALUES ('" + name + "','" + address + "','" + phone + "','" + mail + "')").then(data => {
     db.query("SELECT id from hotels where name='"+name+"'").then(data =>{
       db.query("INSERT INTO users_hotels (id_user , id_hotel) VALUES ('"+userId+"','"+data[0].id+"')").then(data => {
