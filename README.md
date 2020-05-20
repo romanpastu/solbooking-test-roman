@@ -1,7 +1,7 @@
 # Take home test for www.solbooking.com
 
 **Deployed app**
-http://solbooking.romanpastu.com/
+http://solbooking.romanpastu.com/ (!IMPORTANT , the table wont work in production)
 
 - Preloaded user : roman | roman
 
