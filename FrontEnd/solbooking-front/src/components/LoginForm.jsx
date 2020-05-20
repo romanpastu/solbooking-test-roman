@@ -3,6 +3,7 @@ import { Alert } from 'react-bootstrap'
 class LoginForm extends React.Component {
     constructor(props) {
         super(props)
+        
         this.state = {
             username: "",
             password: "",
@@ -10,6 +11,7 @@ class LoginForm extends React.Component {
             serverError: false
         }
         this.handleDismiss = this.handleDismiss.bind(this)
+        this.handleSubmit = this.handleSubmit.bind(this)
     }
 
     handleChange = (evt) => {
@@ -27,6 +29,11 @@ class LoginForm extends React.Component {
             wrongCombo: false,
             serverError: false
         })
+    }
+
+    handleSubmit = function(event){
+        event.preventDefault();
+        this.props.login(this.state.username, this.state.password)
     }
 
 
