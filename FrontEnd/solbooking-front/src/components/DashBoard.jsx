@@ -7,8 +7,17 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrashAlt } from '@fortawesome/free-regular-svg-icons'
 import DeleteHotelModal from "./DashBoardPanel/DeleteHotelModal"
 import EditHotelModal from "./DashBoardPanel/EditHotelModal"
+import CreateHotelModal from "./DashBoardPanel/CreateHotelModal"
+import { connect } from "react-redux"
 import "./DashBoard.css"
-export default class DashBoard extends React.Component {
+
+const mapStateToProps = state => {
+    return {
+        userId: state.userId
+    }
+}
+
+class DashBoard extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
@@ -16,6 +25,7 @@ export default class DashBoard extends React.Component {
             rowId: "",
             showDeleteHotelModal: false,
             showEditHotelModal: false,
+            showCreateHotelModal: false,
             editHotelInfo: {
                 hotelName: "",
                 hotelAddres: "",
@@ -31,6 +41,8 @@ export default class DashBoard extends React.Component {
         this.showEditHotelModal = this.showEditHotelModal.bind(this)
         this.closeEditHotelModal = this.closeEditHotelModal.bind(this)
         this.handleSubmitHotelEdit = this.handleSubmitHotelEdit.bind(this)
+        this.showCreateHotelModal = this.showCreateHotelModal.bind(this)
+        this.closeCreateHotelModal = this.closeCreateHotelModal.bind(this)
     }
 
     componentDidMount() {
@@ -39,7 +51,7 @@ export default class DashBoard extends React.Component {
 
     //Gets the hotel list
     getHotelList() {
-        API.get(constants.urlBackend + "/user/6/hotel-list").then(res => {
+        API.get(constants.urlBackend + "/user/"+this.props.userId+"/hotel-list").then(res => {
             this.setState({
                 hotelList: res.data
             }, () => {
@@ -89,12 +101,14 @@ export default class DashBoard extends React.Component {
         })
     }
 
+
     
 
     deleteHotel() {
 
         API.delete(constants.urlBackend + "/hotel/" + this.state.rowId + "/delete").then(response => {
             console.log(response)
+            this.getHotelList();
         }).catch(err => {
             console.log(err)
         })
@@ -110,6 +124,22 @@ export default class DashBoard extends React.Component {
     closeDeleteHotelModal() {
         this.setState({
             showDeleteHotelModal: false
+        }, () => {
+
+        })
+    }
+
+    showCreateHotelModal() {
+        console.log("showed")
+        this.setState({
+            showCreateHotelModal: true,
+        })
+        
+    }
+
+    closeCreateHotelModal() {
+        this.setState({
+            showCreateHotelModal: false
         }, () => {
 
         })
@@ -138,9 +168,6 @@ export default class DashBoard extends React.Component {
         })
     }
 
-    componentDidUpdate(){
-        
-    }
 
     render() {
         var hotels = this.state.hotelList
@@ -149,9 +176,9 @@ export default class DashBoard extends React.Component {
             Td = Reactable.Td,
             Tr = Reactable.Tr;
 
-        if (hotels.length === 0) {
-            return <p>loading</p>
-        }
+        // if (hotels.length === 0) {
+        //     return <p>loading</p>
+        // }
 
 
         return (
@@ -159,7 +186,7 @@ export default class DashBoard extends React.Component {
                 <NavBar logout={this.props.logout} />
                 <div className="text-center">
                     <h3>Listado de Hoteles</h3>
-                    <button className="btn btn-primary">Create an hotel</button>
+                    <button className="btn btn-primary" style={{marginBottom :"0.5vh"}}  onClick={this.showCreateHotelModal}>Create an hotel</button>
                 </div>
                 <Table
                     className="table"
@@ -192,7 +219,10 @@ export default class DashBoard extends React.Component {
                 handleSubmit={this.handleSubmitHotelEdit}
                 rowId={this.state.rowId} showEditHotelModal={this.state.showEditHotelModal} closeEditHotelModal={this.closeEditHotelModal} hotelInfo={this.state.editHotelInfo}
                 />
+                <CreateHotelModal showCreateHotelModal={this.state.showCreateHotelModal} closeCreateHotelModal={this.closeCreateHotelModal} getHotelList={this.getHotelList}/>
+
             </div>
         )
     }
 }
+export default connect(mapStateToProps)(DashBoard)

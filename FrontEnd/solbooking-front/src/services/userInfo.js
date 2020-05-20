@@ -13,7 +13,19 @@ const getUserName = () =>{
     
 }
 
+const getUserId = () =>{
+    
+    var decoded = [];
+    decoded.userId = [];
+    var accesstoken = Cookies.get('accesstoken');
+    if(accesstoken){
+     var decoded  = jwtDecode(accesstoken)
+    }
+    return decoded.userId;
+    
+}
+
 
 module.exports = {
-    getUserName
+    getUserName, getUserId
 }

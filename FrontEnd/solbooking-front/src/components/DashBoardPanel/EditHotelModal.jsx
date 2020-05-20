@@ -2,6 +2,8 @@ import React from 'react'
 import './EditHotelModal.css'
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimesCircle } from '@fortawesome/free-regular-svg-icons'
+import API from '../../services/axiosObject.js'
+import constants from "../../constants.js"
 class EditHotelModal extends React.Component {
     constructor(props) {
         super(props)
@@ -12,9 +14,6 @@ class EditHotelModal extends React.Component {
         console.log(this.props.hotelInfo)
     }
 
-    componentDidUpdate(){
-      
-    }
 
     render() {
         if (!this.props.showEditHotelModal) {
