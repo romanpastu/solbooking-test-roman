@@ -1,5 +1,7 @@
 import React from 'react';
 import LoginPage from "./components/LoginPage"
+import compose from 'recompose/compose'
+import { connect } from "react-redux";
 import DashBoard from "./components/DashBoard"
 import { Route, Switch , withRouter} from 'react-router-dom'
 import constants from './constants.js'
@@ -9,6 +11,13 @@ import axios from 'axios'
 import isAuthenticated from './services/authService';
 import PrivateRoute from './components/PrivateRoute';
 import './App.css';
+import { setUserName } from "./redux/actions/reduxActions.js"
+import { getUserName } from "./services/userInfo.js"
+function mapDispatchToProps(dispatch) {
+  return {
+    setUserName: element => dispatch(setUserName(element))
+  }
+}
 
 class App extends React.Component {
   constructor(props){
@@ -50,6 +59,7 @@ class App extends React.Component {
 
         isAuthenticated().then((result) => {
           if(result === true){
+            this.props.setUserName(getUserName())
             this.setState({isAuthenticated: true, authenticationChecked: true}, () =>{
               this.props.history.push('/dashboard')
             })
@@ -82,4 +92,7 @@ class App extends React.Component {
   }
 }
 
-export default withRouter(App);
+export default compose(
+  withRouter,
+  connect(null, mapDispatchToProps)
+)(App);

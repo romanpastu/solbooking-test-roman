@@ -1,7 +1,7 @@
 import {SET_USER_NAME} from "../constants/action-types"
 
 const initialState ={
-    userName: "Hola"
+    userName: ""
 }
 
 function rootReducer(state = initialState, action){
