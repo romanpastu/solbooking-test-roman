@@ -41,6 +41,9 @@ class App extends React.Component {
         this.setState({ isAuthenticated: false, authenticationChecked: true })
       }
     });
+
+    this.props.setUserName(getUserName())
+    
   }
 
   login = (nickname, password) =>{
