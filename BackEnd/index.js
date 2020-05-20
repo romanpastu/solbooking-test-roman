@@ -199,9 +199,10 @@ app.get('/user/:id/hotel-list',requireLogin, async (req, res) => {
 })
 
 //register a new hotel
-app.post('/hotel/register', requireLogin,async (req, res) => {
+app.post('/hotel/register/:id', requireLogin,async (req, res) => {
+  const userId = req.params.id;
   const { name, address, phone, mail } = req.body;
-
+console.log(name,address,phone,mail)
   //checks if the mail is valid
   if ((mail.match(/@/g) || []).length != 1) {
     res.status(401).send("invalid mail")
@@ -209,8 +210,12 @@ app.post('/hotel/register', requireLogin,async (req, res) => {
   };
 
   db.query("INSERT INTO hotels (name, address, phone, mail) VALUES ('" + name + "','" + address + "','" + phone + "','" + mail + "')").then(data => {
-    console.log(data)
-    res.status(200).send("inserted")
+    db.query("SELECT id from hotels where name='"+name+"'").then(data =>{
+      db.query("INSERT INTO users_hotels (id_user , id_hotel) VALUES ('"+userId+"','"+data[0].id+"')").then(data => {
+        console.log(data)
+        res.status(200).send("inserted")
+      })
+    })
   }).catch(err => {
     console.log(err)
     res.status(400).send(err)
@@ -220,6 +225,7 @@ app.post('/hotel/register', requireLogin,async (req, res) => {
 //Delete an hotel
 app.delete('/hotel/:id/delete',requireLogin, async (req, res) => {
   const hotelId = req.params.id;
+  console.log("time to delete")
   db.query("DELETE from hotels where id='" + hotelId + "';").then(data => {
     console.log(data)
     res.status(200).send("deleted")
