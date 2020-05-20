@@ -25,3 +25,4 @@
   ```
 - Run `npm i` in the BackEnd , and in the FrontEnd files in order to install the dependencies
 - Run `npm run dev` in the BackEnd directory in order to start a dev server, and `npm run start` in the FrontEnd folder to start React in development mode. You can optionally create a production build for the fronEnd. The instructions can be found there https://create-react-app.dev/docs/deployment/
+- The file `constants.js` located in `FrontEnd/solbooking-front/src/constants.js` should be modified, and the portnumber, and the ipServer set directly to yout backend settings.
