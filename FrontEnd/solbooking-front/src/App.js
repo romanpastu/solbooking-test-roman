@@ -1,12 +1,13 @@
 import React from 'react';
 import LoginPage from "./components/LoginPage"
+import DashBoard from "./components/DashBoard"
 import { Route, Switch , withRouter} from 'react-router-dom'
 import constants from './constants.js'
 import Cookies from 'js-cookie';
 import qs from 'qs'
 import axios from 'axios'
 import isAuthenticated from './services/authService';
-import PrivateRoute from './components/PrivateRoute'
+import PrivateRoute from './components/PrivateRoute';
 import './App.css';
 
 class App extends React.Component {
@@ -73,7 +74,8 @@ class App extends React.Component {
       <div>
         <Switch>
           <Route exact path="/" render={(props) => <LoginPage {...props} login={this.login} authed={this.state.isAuthenticated}/>}></Route>
-          <PrivateRoute authed={this.state.isAuthenticated} path="/dashboard" render={() => <div><p>Welcome to the dashboard</p></div>}></PrivateRoute> 
+          <PrivateRoute authed={this.state.isAuthenticated} path="/dashboard" render={() => <DashBoard {...this.props}/>}></PrivateRoute>
+          <Route path="/" render={(props) => this.props.history.push("/")} />  
         </Switch>
       </div>
     )
