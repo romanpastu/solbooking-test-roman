@@ -6,40 +6,51 @@ import Reactable from "reactable"
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEdit, faTrashAlt } from '@fortawesome/free-regular-svg-icons'
 import DeleteHotelModal from "./DashBoardPanel/DeleteHotelModal"
+import EditHotelModal from "./DashBoardPanel/EditHotelModal"
 import "./DashBoard.css"
 export default class DashBoard extends React.Component {
-    constructor(props){
+    constructor(props) {
         super(props)
         this.state = {
             hotelList: [],
             rowId: "",
-            showDeleteHotelModal: false
+            showDeleteHotelModal: false,
+            showEditHotelModal: false,
+            editHotelInfo: {
+                hotelName: "juan",
+                hotelAddres: "",
+                hotelPhone: "",
+                hotelMail: ""
+            }
+
         }
-    this.getHotelList = this.getHotelList.bind(this)
-    this.deleteHotel = this.deleteHotel.bind(this)
-    this.showDeleteHotelModal = this.showDeleteHotelModal.bind(this)
-    this.closeDeleteHotelModal = this.closeDeleteHotelModal.bind(this)
+        this.getHotelList = this.getHotelList.bind(this)
+        this.deleteHotel = this.deleteHotel.bind(this)
+        this.showDeleteHotelModal = this.showDeleteHotelModal.bind(this)
+        this.closeDeleteHotelModal = this.closeDeleteHotelModal.bind(this)
+        this.showEditHotelModal = this.showEditHotelModal.bind(this)
+        this.closeEditHotelModal = this.closeEditHotelModal.bind(this)
     }
 
-    componentDidMount(){
+    componentDidMount() {
         this.getHotelList();
     }
 
-    getHotelList(){
-       API.get(constants.urlBackend+"/user/6/hotel-list").then(res => {
-           this.setState({
-            hotelList: res.data
-           }, () => {
-               console.log(this.state.hotelList)
-           })
-       }).catch(err => {
-           console.log(err)
-       })
+    getHotelList() {
+        API.get(constants.urlBackend + "/user/6/hotel-list").then(res => {
+            this.setState({
+                hotelList: res.data
+            }, () => {
+                console.log(this.state.hotelList)
+            })
+        }).catch(err => {
+            console.log(err)
+        })
     }
 
-    deleteHotel(){
+    deleteHotel() {
 
-        API.post(constants.urlBackend+"/hotel/"+this.state.rowId+"/delete").then(response =>{
+        API.delete(constants.urlBackend + "/hotel/" + this.state.rowId + "/delete").then(response => {
             console.log(response)
         }).catch(err => {
             console.log(err)
@@ -61,7 +72,34 @@ export default class DashBoard extends React.Component {
         })
     }
 
-    render(){
+    showEditHotelModal(rowId, hotelName, hotelAddress, hotelPhone, hotelMail) {
+        let obj = Object.assign({}, this.state.editHotelInfo)
+
+        obj.hotelName= hotelName;
+        obj.hotelAddres = hotelAddress;
+        obj.hotelPhone = hotelPhone;
+        obj.hotelMail = hotelMail;
+
+        this.setState({
+            showEditHotelModal: true,
+            rowId: rowId,
+            editHotelInfo: obj
+        }, () =>{
+            
+        })
+    }
+
+    closeEditHotelModal() {
+        this.setState({
+            showEditHotelModal: false
+        })
+    }
+
+    componentDidUpdate(){
+        
+    }
+
+    render() {
         var hotels = this.state.hotelList
 
         const Table = Reactable.Table,
@@ -73,13 +111,16 @@ export default class DashBoard extends React.Component {
         }
 
 
-        return(
+        return (
             <div>
-                <NavBar logout={this.props.logout}/>
-                <div className="text-center"><h3>Listado de Hoteles</h3></div>
+                <NavBar logout={this.props.logout} />
+                <div className="text-center">
+                    <h3>Listado de Hoteles</h3>
+                    <button className="btn btn-primary">Create an hotel</button>
+                </div>
                 <Table
                     className="table"
-                    filterable={['Name','Address']}
+                    filterable={['Name', 'Address']}
                     itesPerPage={10}
                     currentPage={0}
                     sortable={true}
@@ -92,14 +133,15 @@ export default class DashBoard extends React.Component {
                                 <Td column="Address">{row.address}</Td>
                                 <Td column="Phone">{row.phone}</Td>
                                 <Td column="Mail">{row.mail}</Td>
-                                <Td column="Manage"><div><FontAwesomeIcon className="editIcon" onClick={() => console.log("hi")} icon={faEdit}></FontAwesomeIcon>
+                                <Td column="Manage"><div><FontAwesomeIcon className="editIcon" onClick={() => this.showEditHotelModal(row.id, row.name, row.address, row.phone, row.mail)} icon={faEdit}></FontAwesomeIcon>
                                     <FontAwesomeIcon className="editIcon" onClick={() => this.showDeleteHotelModal(row.id)} icon={faTrashAlt}></FontAwesomeIcon>
                                 </div></Td>
                             </Tr>
                         )
                     })}
                 </Table>
-                <DeleteHotelModal showDeleteHotelModal={this.state.showDeleteHotelModal} closeDeleteHotelModal={this.closeDeleteHotelModal}  deleteHotel={this.deleteHotel} />
+                <DeleteHotelModal showDeleteHotelModal={this.state.showDeleteHotelModal} closeDeleteHotelModal={this.closeDeleteHotelModal} deleteHotel={this.deleteHotel} />
+                <EditHotelModal rowId={this.state.rowId} showEditHotelModal={this.state.showEditHotelModal} closeEditHotelModal={this.closeEditHotelModal} hotelInfo={this.state.editHotelInfo}/>
             </div>
         )
     }
