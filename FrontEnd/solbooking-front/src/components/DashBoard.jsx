@@ -15,7 +15,7 @@ export default class DashBoard extends React.Component {
             <div>
                 <NavBar logout={this.props.logout}/>
                 <div>
-                    Hello world
+                    <h3>Listado de Hoteles</h3>
                 </div>
             </div>
         )
