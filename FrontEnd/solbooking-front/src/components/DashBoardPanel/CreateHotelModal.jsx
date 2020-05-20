@@ -83,7 +83,7 @@ class CreateHotelModal extends React.Component {
                         <FontAwesomeIcon className="headerClose" icon={faTimesCircle} onClick={this.onClick} />
                         <div style={{ marginTop: "20px" }}>
                             {this.state.wrongEmail ? <Alert variant="danger" dismissible onClose={this.handleDismiss}> Wrong email format </Alert> : null}
-                            {this.state.networkError ? <Alert variant="danger" dismissible onClose={this.handleDismiss}> Network Error </Alert> : null}
+                            {this.state.networkError ? <Alert variant="danger" dismissible onClose={this.handleDismiss}> Error check your network and make sure that the hotel doesnt already exist</Alert> : null}
                         </div>
 
                         <div class="form-group">

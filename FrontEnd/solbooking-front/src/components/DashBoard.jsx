@@ -34,7 +34,9 @@ class DashBoard extends React.Component {
                 hotelPhone: "",
                 hotelMail: ""
             },
-            deleteNetworkError: false
+            deleteNetworkError: false,
+            wrongEmailEditHotelModal: false,
+            networkErrorEditHotelModal: false
 
         }
         this.getHotelList = this.getHotelList.bind(this)
@@ -47,6 +49,7 @@ class DashBoard extends React.Component {
         this.showCreateHotelModal = this.showCreateHotelModal.bind(this)
         this.closeCreateHotelModal = this.closeCreateHotelModal.bind(this)
         this.handleDismiss = this.handleDismiss.bind(this)
+        this.handleDismissEditHotelAlerts = this.handleDismissEditHotelAlerts.bind(this)
     }
 
     componentDidMount() {
@@ -90,6 +93,9 @@ class DashBoard extends React.Component {
 
     //handleSubmit for the Hotel Edit
     handleSubmitHotelEdit(event){
+        this.setState({
+            wrongEmailEditHotelModal: false
+        })
         event.preventDefault();
 
         var name = this.state.editHotelInfo.hotelName
@@ -101,7 +107,23 @@ class DashBoard extends React.Component {
             console.log(res)
             this.getHotelList();
         }).catch(err => {
+            if (err == "Error: Request failed with status code 401") {
+                this.setState({
+                    wrongEmailEditHotelModal: true
+                })
+            }else if (err = "Error: Network Error") {
+                this.setState({
+                    networkErrorEditHotelModal: true
+                })
+            }
             console.log(err)
+        })
+    }
+
+    handleDismissEditHotelAlerts(){
+        this.setState({
+                wrongEmailEditHotelModal: false,
+                networkErrorEditHotelModal: false
         })
     }
 
@@ -193,10 +215,10 @@ class DashBoard extends React.Component {
             Td = Reactable.Td,
             Tr = Reactable.Tr;
 
-        // if (hotels.length === 0) {
-        //     return <p>loading</p>
-        // }
-
+        
+            // if (hotels.length === 0) {
+            //     return <p>You currnetly have no hotels, create one!</p>
+            // }
 
         return (
             <div>
@@ -204,8 +226,9 @@ class DashBoard extends React.Component {
                 {this.state.deleteNetworkError ? <Alert variant="danger" dismissible onClose={this.handleDismiss}> There was a network error while deleting the hotel </Alert> : null}
                 <div className="text-center">
                     <h3>Listado de Hoteles</h3>
-                    <button className="btn btn-primary" style={{marginBottom :"0.5vh"}}  onClick={this.showCreateHotelModal}>Create an hotel</button>
+                    <button className="btn btn-primary" style={{marginBottom :"0.5vh"}}  onClick={this.showCreateHotelModal}>Crear un hotel</button>
                 </div>
+                
                 <Table
                     className="table"
                     filterable={['Name', 'Address']}
@@ -236,6 +259,8 @@ class DashBoard extends React.Component {
                 handleChangeAddress={this.handleChangeAddress}
                 handleSubmit={this.handleSubmitHotelEdit}
                 rowId={this.state.rowId} showEditHotelModal={this.state.showEditHotelModal} closeEditHotelModal={this.closeEditHotelModal} hotelInfo={this.state.editHotelInfo}
+                wrongEmailEditHotelModal={this.state.wrongEmailEditHotelModal} handleDismissEditHotelAlerts={this.handleDismissEditHotelAlerts}
+                networkErrorEditHotelModal = {this.state.networkErrorEditHotelModal}
                 />
                 <CreateHotelModal showCreateHotelModal={this.state.showCreateHotelModal} closeCreateHotelModal={this.closeCreateHotelModal} getHotelList={this.getHotelList}/>
 
