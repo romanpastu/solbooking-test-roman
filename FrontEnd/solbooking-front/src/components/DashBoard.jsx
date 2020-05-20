@@ -9,11 +9,13 @@ import DeleteHotelModal from "./DashBoardPanel/DeleteHotelModal"
 import EditHotelModal from "./DashBoardPanel/EditHotelModal"
 import CreateHotelModal from "./DashBoardPanel/CreateHotelModal"
 import { connect } from "react-redux"
+import { Alert } from 'react-bootstrap'
 import "./DashBoard.css"
 
 const mapStateToProps = state => {
     return {
-        userId: state.userId
+        userId: state.userId,
+        deleteNetworkError: false
     }
 }
 
@@ -31,7 +33,8 @@ class DashBoard extends React.Component {
                 hotelAddres: "",
                 hotelPhone: "",
                 hotelMail: ""
-            }
+            },
+            deleteNetworkError: false
 
         }
         this.getHotelList = this.getHotelList.bind(this)
@@ -43,6 +46,7 @@ class DashBoard extends React.Component {
         this.handleSubmitHotelEdit = this.handleSubmitHotelEdit.bind(this)
         this.showCreateHotelModal = this.showCreateHotelModal.bind(this)
         this.closeCreateHotelModal = this.closeCreateHotelModal.bind(this)
+        this.handleDismiss = this.handleDismiss.bind(this)
     }
 
     componentDidMount() {
@@ -109,8 +113,15 @@ class DashBoard extends React.Component {
         API.delete(constants.urlBackend + "/hotel/" + this.state.rowId + "/delete").then(response => {
             console.log(response)
             this.getHotelList();
+            this.closeDeleteHotelModal();
         }).catch(err => {
             console.log(err)
+            if(err == "Error: Network Error"){
+                this.setState({
+                    deleteNetworkError: true,
+                    showDeleteHotelModal: false
+                })
+            }
         })
     }
 
@@ -126,6 +137,12 @@ class DashBoard extends React.Component {
             showDeleteHotelModal: false
         }, () => {
 
+        })
+    }
+
+    handleDismiss(){
+        this.setState({
+            deleteNetworkError: false
         })
     }
 
@@ -184,6 +201,7 @@ class DashBoard extends React.Component {
         return (
             <div>
                 <NavBar logout={this.props.logout} />
+                {this.state.deleteNetworkError ? <Alert variant="danger" dismissible onClose={this.handleDismiss}> There was a network error while deleting the hotel </Alert> : null}
                 <div className="text-center">
                     <h3>Listado de Hoteles</h3>
                     <button className="btn btn-primary" style={{marginBottom :"0.5vh"}}  onClick={this.showCreateHotelModal}>Create an hotel</button>
