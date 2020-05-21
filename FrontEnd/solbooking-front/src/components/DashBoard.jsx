@@ -10,7 +10,6 @@ import EditHotelModal from "./DashBoardPanel/EditHotelModal"
 import CreateHotelModal from "./DashBoardPanel/CreateHotelModal"
 import { connect } from "react-redux"
 import { Alert } from 'react-bootstrap'
-import MaterialTable from "material-table";
 import "./DashBoard.css"
 
 const mapStateToProps = state => {
