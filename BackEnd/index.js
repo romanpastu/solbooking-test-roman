@@ -153,7 +153,7 @@ app.post('/refresh_token', (req, res) => {
 
 
 
-  //once userId refresh token is know we verify it
+  //once userId refresh token is known we verify it
   db.query("SELECT * FROM users where id='" + userId + "'").then(data => {
     var user = data;
     token = user[0].refresh_token;
@@ -184,7 +184,6 @@ app.post('/refresh_token', (req, res) => {
       const refreshtoken = createRefreshToken(user[0].id);
 
       db.query("UPDATE users SET refresh_token = '" + refreshtoken + "' WHERE id = '" + user[0].id + "';").then(function (data) {
-        // sendRefreshToken(res, refreshtoken); //unnecesary
         return res.send({ accesstoken });
 
       }).catch(function (error) {
@@ -222,8 +221,6 @@ console.log(name,address,phone,mail)
     res.status(401).send("invalid mail")
     throw new Error("Invalid mail");
   };
-
-
 
   db.query("INSERT INTO hotels (name, address, phone, mail) VALUES ('" + name + "','" + address + "','" + phone + "','" + mail + "')").then(data => {
     db.query("SELECT id from hotels where name='"+name+"'").then(data =>{
