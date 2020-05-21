@@ -10,6 +10,7 @@ import EditHotelModal from "./DashBoardPanel/EditHotelModal"
 import CreateHotelModal from "./DashBoardPanel/CreateHotelModal"
 import { connect } from "react-redux"
 import { Alert } from 'react-bootstrap'
+import MaterialTable from "material-table";
 import "./DashBoard.css"
 
 const mapStateToProps = state => {
@@ -58,41 +59,41 @@ class DashBoard extends React.Component {
 
     //Gets the hotel list
     getHotelList() {
-        API.get(constants.urlBackend + "/user/"+this.props.userId+"/hotel-list").then(res => {
+        API.get(constants.urlBackend + "/user/" + this.props.userId + "/hotel-list").then(res => {
             this.setState({
                 hotelList: res.data
             }, () => {
-               
+
             })
         }).catch(err => {
-            
+
         })
     }
 
     //handleChange Functions For the Hotel Edit
     handleChangeName = (evt) => {
         this.setState({
-            editHotelInfo: Object.assign({}, this.state.editHotelInfo, {hotelName: evt.target.value})
+            editHotelInfo: Object.assign({}, this.state.editHotelInfo, { hotelName: evt.target.value })
         })
     }
     handleChangeAddress = (evt) => {
         this.setState({
-            editHotelInfo: Object.assign({}, this.state.editHotelInfo, {hotelAddres: evt.target.value})
+            editHotelInfo: Object.assign({}, this.state.editHotelInfo, { hotelAddres: evt.target.value })
         })
     }
     handleChangePhone = (evt) => {
         this.setState({
-            editHotelInfo: Object.assign({}, this.state.editHotelInfo, {hotelPhone: evt.target.value})
+            editHotelInfo: Object.assign({}, this.state.editHotelInfo, { hotelPhone: evt.target.value })
         })
     }
     handleChangeMail = (evt) => {
         this.setState({
-            editHotelInfo: Object.assign({}, this.state.editHotelInfo, {hotelMail: evt.target.value})
+            editHotelInfo: Object.assign({}, this.state.editHotelInfo, { hotelMail: evt.target.value })
         })
     }
 
     //handleSubmit for the Hotel Edit
-    handleSubmitHotelEdit(event){
+    handleSubmitHotelEdit(event) {
         this.setState({
             wrongEmailEditHotelModal: false
         })
@@ -102,43 +103,40 @@ class DashBoard extends React.Component {
         var address = this.state.editHotelInfo.hotelAddres
         var phone = this.state.editHotelInfo.hotelPhone
         var mail = this.state.editHotelInfo.hotelMail
-        
-        API.post(constants.urlBackend+"/hotel/"+this.state.rowId+"/update",{name, address, phone, mail}).then( res =>{
-            
+
+        API.post(constants.urlBackend + "/hotel/" + this.state.rowId + "/update", { name, address, phone, mail }).then(res => {
+
             this.getHotelList();
         }).catch(err => {
             if (err == "Error: Request failed with status code 401") {
                 this.setState({
                     wrongEmailEditHotelModal: true
                 })
-            }else if (err = "Error: Network Error") {
+            } else if (err = "Error: Network Error") {
                 this.setState({
                     networkErrorEditHotelModal: true
                 })
             }
-           
+
         })
     }
-
-    handleDismissEditHotelAlerts(){
+    //dissmisses the alerts for the hoteledit panel
+    handleDismissEditHotelAlerts() {
         this.setState({
-                wrongEmailEditHotelModal: false,
-                networkErrorEditHotelModal: false
+            wrongEmailEditHotelModal: false,
+            networkErrorEditHotelModal: false
         })
     }
 
-
-    
-
+    //hotel deletion related actions
+    //deletes an hotel
     deleteHotel() {
-
         API.delete(constants.urlBackend + "/hotel/" + this.state.rowId + "/delete").then(response => {
-          
             this.getHotelList();
             this.closeDeleteHotelModal();
         }).catch(err => {
-            
-            if(err == "Error: Network Error"){
+
+            if (err == "Error: Network Error") {
                 this.setState({
                     deleteNetworkError: true,
                     showDeleteHotelModal: false
@@ -162,18 +160,18 @@ class DashBoard extends React.Component {
         })
     }
 
-    handleDismiss(){
+    handleDismiss() {
         this.setState({
             deleteNetworkError: false
         })
     }
 
+    //hotel creation related actions
     showCreateHotelModal() {
-       
         this.setState({
             showCreateHotelModal: true,
         })
-        
+        console.log("clickclick")
     }
 
     closeCreateHotelModal() {
@@ -187,7 +185,7 @@ class DashBoard extends React.Component {
     showEditHotelModal(rowId, hotelName, hotelAddress, hotelPhone, hotelMail) {
         let obj = Object.assign({}, this.state.editHotelInfo)
 
-        obj.hotelName= hotelName;
+        obj.hotelName = hotelName;
         obj.hotelAddres = hotelAddress;
         obj.hotelPhone = hotelPhone;
         obj.hotelMail = hotelMail;
@@ -196,8 +194,8 @@ class DashBoard extends React.Component {
             showEditHotelModal: true,
             rowId: rowId,
             editHotelInfo: obj
-        }, () =>{
-            
+        }, () => {
+
         })
     }
 
@@ -215,10 +213,6 @@ class DashBoard extends React.Component {
             Td = Reactable.Td,
             Tr = Reactable.Tr;
 
-        
-            // if (hotels.length === 0) {
-            //     return <p>You currnetly have no hotels, create one!</p>
-            // }
 
         return (
             <div>
@@ -226,9 +220,9 @@ class DashBoard extends React.Component {
                 {this.state.deleteNetworkError ? <Alert variant="danger" dismissible onClose={this.handleDismiss}> There was a network error while deleting the hotel </Alert> : null}
                 <div className="text-center">
                     <h3>Listado de Hoteles</h3>
-                    <button className="btn btn-primary" style={{marginBottom :"0.5vh"}}  onClick={this.showCreateHotelModal}>Crear un hotel</button>
+                    <button className="btn btn-primary" style={{ marginBottom: "0.5vh" }} onClick={this.showCreateHotelModal}>Crear un hotel</button>
                 </div>
-                
+
                 <Table
                     className="table"
                     filterable={['Name', 'Address']}
@@ -262,8 +256,7 @@ class DashBoard extends React.Component {
                 wrongEmailEditHotelModal={this.state.wrongEmailEditHotelModal} handleDismissEditHotelAlerts={this.handleDismissEditHotelAlerts}
                 networkErrorEditHotelModal = {this.state.networkErrorEditHotelModal}
                 />
-                <CreateHotelModal showCreateHotelModal={this.state.showCreateHotelModal} closeCreateHotelModal={this.closeCreateHotelModal} getHotelList={this.getHotelList}/>
-
+                <CreateHotelModal showCreateHotelModal={this.state.showCreateHotelModal} closeCreateHotelModal={this.closeCreateHotelModal} getHotelList={this.getHotelList}/>   
             </div>
         )
     }
